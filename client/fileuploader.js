@@ -1201,6 +1201,7 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.setRequestHeader("X-File-Name", encodeURIComponent(name));
         xhr.setRequestHeader("Content-Type", "application/octet-stream");
+        xhr.setRequestHeader("Accept", "application/json");
         xhr.send(file);
     },
     _onComplete: function(id, xhr){
