@@ -1241,7 +1241,8 @@ qq.UploadHandlerXhr.isSupported = function(){
     return (
         'multiple' in input &&
         typeof File != "undefined" &&
-        typeof (new XMLHttpRequest()).upload != "undefined" );       
+        typeof FormData != "undefined" &&
+        typeof (new XMLHttpRequest()).upload != "undefined" );
 };
 
 // @inherits qq.UploadHandlerAbstract
@@ -1312,9 +1313,14 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
         xhr.open("POST", queryString, true);
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.setRequestHeader("X-File-Name", encodeURIComponent(name));
-        xhr.setRequestHeader("Content-Type", "application/octet-stream");
-        //NOTE: return mime type in xhr works on chrome 16.0.9 firefox 11.0a2
-        xhr.setRequestHeader("X-Mime-Type",file.type );
+        if (this._options.encoding == 'multipart') {
+            var formData = new FormData();
+            file = formData.append(name, file);
+        } else {
+            xhr.setRequestHeader("Content-Type", "application/octet-stream");
+            //NOTE: return mime type in xhr works on chrome 16.0.9 firefox 11.0a2
+            xhr.setRequestHeader("X-Mime-Type",file.type );
+        }
         for (key in this._options.customHeaders){
             xhr.setRequestHeader(key, this._options.customHeaders[key]);
         };
