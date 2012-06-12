@@ -531,18 +531,14 @@ qq.FileUploader = function(o){
         template: '<div class="qq-uploader">' + 
                 '<div class="qq-upload-drop-area"><span>{dragText}</span></div>' +
                 '<div class="qq-upload-button">{uploadButtonText}</div>' +
-                '<ul class="qq-upload-list"></ul>' + 
-             '</div>',
-
-        // template for one item in file list
-        fileTemplate: '<li>' +
-                '<span class="qq-upload-file"></span>' +
-                '<span class="qq-upload-spinner"></span>' +
-                '<span class="qq-upload-size"></span>' +
-                '<a class="qq-upload-cancel" href="#">{cancelButtonText}</a>' +
-                '<span class="qq-upload-failed-text">{failUploadtext}</span>' +
-            '</li>',        
-        
+                '<div class="qq-upload-progress" id="status-bar">' +
+					'<span class="qq-upload-file" id="file-name"></span>' +
+					'<span class="qq-upload-spinner" id="spinner" ></span>' +
+					'<span class="qq-upload-size" id="file-size"></span>' +
+					'<a class="qq-upload-cancel" id="cancel" href="#">{cancelButtonText}</a>' +
+					'<span class="qq-upload-failed-text">{failUploadtext}</span>' + 
+				'</div>',
+       
         classes: {
             // used to get elements from templates
             button: 'qq-upload-button',
@@ -569,18 +565,19 @@ qq.FileUploader = function(o){
     // same for the Cancel button and Fail message text
     this._options.template     = this._options.template.replace(/\{dragText\}/g, this._options.dragText);
     this._options.template     = this._options.template.replace(/\{uploadButtonText\}/g, this._options.uploadButtonText);
-    this._options.fileTemplate = this._options.fileTemplate.replace(/\{cancelButtonText\}/g, this._options.cancelButtonText);
-    this._options.fileTemplate = this._options.fileTemplate.replace(/\{failUploadtext\}/g, this._options.failUploadText);
+    this._options.template = this._options.template.replace(/\{cancelButtonText\}/g, this._options.cancelButtonText);
+    this._options.template = this._options.template.replace(/\{failUploadtext\}/g, this._options.failUploadText);
 
     this._element = this._options.element;
     this._element.innerHTML = this._options.template;        
-    this._listElement = this._options.listElement || this._find(this._element, 'list');
+    this._listElement = null
+	//this._options.listElement || this._find(this._element, 'list');
     
     this._classes = this._options.classes;
         
     this._button = this._createUploadButton(this._find(this._element, 'button'));        
     
-    this._bindCancelEvent();
+    //this._bindCancelEvent();
     this._setupDragDrop();
 };
 
@@ -675,29 +672,38 @@ qq.extend(qq.FileUploader.prototype, {
         });               
     },
     _onSubmit: function(id, fileName){
+		console.log("ZHUBICEN After selecting the file.....start uploading???????")
         qq.FileUploaderBasic.prototype._onSubmit.apply(this, arguments);
-        this._addToList(id, fileName);  
+		fileElement = document.getElementById("file-name")
+		qq.setText(fileElement, fileName)
+        //this._addToList(id, fileName);  
     },
     _onProgress: function(id, fileName, loaded, total){
         qq.FileUploaderBasic.prototype._onProgress.apply(this, arguments);
-
-        var item = this._getItemByFileId(id);
-        var size = this._find(item, 'size');
+		var item = document.getElementById("status-bar")
+		var size = document.getElementById("file-size")
         size.style.display = 'inline';
-        
-        var text; 
+		var text; 
         if (loaded != total){
             text = Math.round(loaded / total * 100) + '% from ' + this._formatSize(total);
         } else {                                   
             text = this._formatSize(total);
         }          
         
-        qq.setText(size, text);         
+        qq.setText(size, text); 
+		console.log("ZHUBICEN", text)
     },
     _onComplete: function(id, fileName, result){
+		console.log("ZHUBICEN Upload completed")
         qq.FileUploaderBasic.prototype._onComplete.apply(this, arguments);
 
+		var spinner = document.getElementById("spinner")
+		qq.remove(spinner)
+		var cancel = document.getElementById("cancel")
+		qq.remove(cancel)
+		
         // mark completed
+		/*
         var item = this._getItemByFileId(id);                
         qq.remove(this._find(item, 'cancel'));
         qq.remove(this._find(item, 'spinner'));
@@ -706,7 +712,7 @@ qq.extend(qq.FileUploader.prototype, {
             qq.addClass(item, this._classes.success);    
         } else {
             qq.addClass(item, this._classes.fail);
-        }         
+        }*/         
     },
     _addToList: function(id, fileName){
         var item = qq.toElement(this._options.fileTemplate);                

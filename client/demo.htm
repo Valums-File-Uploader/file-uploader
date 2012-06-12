@@ -27,7 +27,7 @@
         function createUploader(){            
             var uploader = new qq.FileUploader({
                 element: document.getElementById('file-uploader-demo1'),
-                action: 'do-nothing.htm',
+                action: '/upload',
                 debug: true,
                 extraDropzones: [qq.getByClass(document, 'qq-upload-extra-drop-area')[0]]
             });           
