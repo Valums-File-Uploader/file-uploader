@@ -1,52 +1,52 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <script src="jquery-1.4.2.min.js" type="text/javascript"></script>
+    <script src="jquery-1.4.2.min.js" type="text/javascript"></script>
 
-  <link href="qunit/qunit/qunit.css" rel="stylesheet" type="text/css" media="screen" />
-	<script src="qunit/qunit/qunit.js" type="text/javascript"></script>
-	
-	<script src="../client/fileuploader.js" type="text/javascript" ></script>
-	<script>
+    <link href="qunit/qunit/qunit.css" rel="stylesheet" type="text/css" media="screen" />
+    <script src="qunit/qunit/qunit.js" type="text/javascript"></script>
+
+    <script src="../client/fileuploader.js" type="text/javascript" ></script>
+    <script>
     var run_tests = function() {
 
     test("detach call", function(){
 
-      var stopper = qq.attach($("#placeholder")[0], "click", function() {});
+        var stopper = qq.attach($("#placeholder")[0], "click", function() {});
 
-      var log = "";
-      qq.detach = function(what, event, handler) {
-        log += what.id + "_" + event;
-      };
+        var log = "";
+        qq.detach = function(what, event, handler) {
+            log += what.id + "_" + event;
+        };
 
-      stopper();
-      equal(log, "placeholder_click", "Should call detach");
+        stopper();
+        equal(log, "placeholder_click", "Should call detach");
     });
 
     test("dispose generic", function(){
 
-      var attach_count = 0;
-      var detach_count = 0;
+    var attach_count = 0;
+    var detach_count = 0;
 
-      var attach = qq.attach;
-      var detach = qq.detach;
-      qq.attach = function() {
+    var attach = qq.attach;
+    var detach = qq.detach;
+    qq.attach = function() {
         attach_count++;
         return attach.apply(this, arguments);
-      };
-      qq.detach = function() {
+    };
+    qq.detach = function() {
         detach_count++;
         return detach.apply(this, arguments);
-      };
+    };
 
-      var uploader = new qq.FileUploader({
+    var uploader = new qq.FileUploader({
         // pass the dom node (ex. $(selector)[0] for jQuery users)
         element: $("#placeholder")[0]
-      });
+    });
 
-      uploader.dispose();
+    uploader.dispose();
 
-      equal(detach_count, attach_count - 1, "Should remove all events, excluding event which disables drop outside");
+    equal(detach_count, attach_count - 1, "Should remove all events, excluding event which disables drop outside");
 
     });
 

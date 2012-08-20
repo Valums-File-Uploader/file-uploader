@@ -451,7 +451,7 @@ test("Complex Objects.", function() {
     function fn2() {
         return "fn2";
     }
-    
+
     // Try to invert the order of some properties to make sure it is covered.
     // It can failed when properties are compared between unsorted arrays.
     equals(QUnit.equiv(

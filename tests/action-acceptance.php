@@ -7,15 +7,15 @@ $fileSize;
 
 if (isset($_GET['qqfile'])){
     $fileName = $_GET['qqfile'];
-    
-	// xhr request
-	$headers = apache_request_headers();
-	$fileSize = (int)$headers['Content-Length'];
+
+    // xhr request
+    $headers = apache_request_headers();
+    $fileSize = (int)$headers['Content-Length'];
 } elseif (isset($_FILES['qqfile'])){
     $fileName = basename($_FILES['qqfile']['name']);
     $fileSize = $_FILES['qqfile']['size'];
 } else {
-	die ('{error: "server-error file not passed"}');
+    die ('{error: "server-error file not passed"}');
 }
 
 if ($fileName == '4text.txt'){
@@ -36,11 +36,11 @@ if ($fileSize > 9 * 1024){
 
 if (count($_GET)){	
     array_merge($_GET, array('fileName'=>$fileName));
-    
+
     $response = array_merge($_GET, array('success'=>true, 'fileName'=>$fileName));
-    
-    // to pass data through iframe you will need to encode all html tags		
-	echo htmlspecialchars(json_encode($response), ENT_NOQUOTES);	
+
+    // to pass data through iframe you will need to encode all html tags
+    echo htmlspecialchars(json_encode($response), ENT_NOQUOTES);
 } else {
-	die ('{error: "server-error  query params not passed"}');
+    die ('{error: "server-error  query params not passed"}');
 }
