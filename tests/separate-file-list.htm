@@ -2,23 +2,23 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link href="../client/fileuploader.css" rel="stylesheet" type="text/css">	
+    <link href="../client/fileuploader.css" rel="stylesheet" type="text/css">	
 </head>
-<body>		
-	
-	<div id="demo"></div>
-	<ul id="separate-list"></ul>
-    
+<body>
+
+    <div id="demo"></div>
+    <ul id="separate-list"></ul>
+
     <script src="../client/fileuploader.js" type="text/javascript"></script>
-    <script>        
-        function createUploader(){            
+    <script>
+        function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById('demo'),
                 listElement: document.getElementById('separate-list'),
                 action: '../client/do-nothing.htm'
-            });           
-        }        
-        window.onload = createUploader;     
-    </script>    
+            });
+        }
+        window.onload = createUploader;
+    </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html>
 <head>
 </head>
-<body>      
+<body>
 
 <script>
 window.addEventListener('load', function(){
@@ -10,10 +10,10 @@ window.addEventListener('load', function(){
         e.preventDefault();
     },false);
     document.addEventListener('dragover', function(e){
-        e.preventDefault();        
+        e.preventDefault();
         // e.dataTransfer.effectAllowed is none
         e.dataTransfer.dropEffect = 'copy';
-    },false);    
+    },false);
 },false);
 </script>
 </html>
