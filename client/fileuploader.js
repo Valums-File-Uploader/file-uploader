@@ -280,6 +280,7 @@ qq.FileUploaderBasic = function(o){
         acceptFiles: null,		// comma separated string of mime-types for browser to display in browse dialog
         sizeLimit: 0,   
         minSizeLimit: 0,                             
+        abortOnFailure: true, // Fail all files if one doesn't meet the criteria
         // events
         // return false to cancel submit
         onSubmit: function(id, fileName){},
@@ -417,14 +418,17 @@ qq.FileUploaderBasic.prototype = {
         this._button.reset();   
     },  
     _uploadFileList: function(files){
+        var goodFiles = [];
         for (var i=0; i<files.length; i++){
-            if ( !this._validateFile(files[i])){
-                return;
-            }            
+            if (this._validateFile(files[i])){
+                goodFiles.push(files[i]);
+            } else {
+                if (this._options.abortOnFailure) return;
+            }
         }
         
-        for (var i=0; i<files.length; i++){
-            this._uploadFile(files[i]);        
+        for (var i=0; i<goodFiles.length; i++){
+            this._uploadFile(goodFiles[i]);
         }        
     },       
     _uploadFile: function(fileContainer){      
