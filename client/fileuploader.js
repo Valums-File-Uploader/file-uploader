@@ -528,6 +528,7 @@ qq.FileUploader = function(o){
         uploadButtonText: 'Upload a file',        
         cancelButtonText: 'Cancel',        
         failUploadText: 'Upload failed',
+        hideShowDropArea: true,
                 
         template: '<div class="qq-uploader">' + 
                 '<div class="qq-upload-drop-area"><span>{dragText}</span></div>' +
@@ -632,7 +633,9 @@ qq.extend(qq.FileUploader.prototype, {
                 qq.removeClass(dropArea, self._classes.dropActive);  
             },
             onDrop: function(e){
-                dropArea.style.display = 'none';
+                if (self._options.hideShowDropArea) {
+                    dropArea.style.display = 'none';
+                }
                 qq.removeClass(dropArea, self._classes.dropActive);
                 self._uploadFileList(e.dataTransfer.files);    
             }
@@ -640,7 +643,9 @@ qq.extend(qq.FileUploader.prototype, {
 
 		this.addDisposer(function() { dz.dispose(); });
 
-		dropArea.style.display = 'none';
+        if (this._options.hideShowDropArea) {
+            dropArea.style.display = 'none';
+        }
     },
     _setupDragDrop: function(){
         var dropArea = this._find(this._element, 'drop');
@@ -669,13 +674,16 @@ qq.extend(qq.FileUploader.prototype, {
         this._attach(document, 'dragleave', function(e){
             var relatedTarget = document.elementFromPoint(e.clientX, e.clientY);
             // only fire when leaving document out
-            if (qq.FileUploader.prototype._leaving_document_out(e)) {        
+            if (self._options.hideShowDropArea &&
+             qq.FileUploader.prototype._leaving_document_out(e)) {
                 for (i=0; i < dropzones.length; i++){ dropzones[i].style.display = 'none'; }
             }
         }); 
         qq.attach(document, 'drop', function(e){
-          for (i=0; i < dropzones.length; i++){ dropzones[i].style.display = 'none'; }
-          e.preventDefault();
+            if (self._options.hideShowDropArea) {
+                for (i=0; i < dropzones.length; i++){ dropzones[i].style.display = 'none'; }
+            }
+            e.preventDefault();
         });               
     },
     _onSubmit: function(id, fileName){
